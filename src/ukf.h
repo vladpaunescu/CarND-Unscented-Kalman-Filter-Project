@@ -67,6 +67,28 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+  // previous timestamp
+  long previous_timestamp_;
+
+  // matrix for sigma points in measurement space
+  MatrixXd Zsig_;
+
+  //mean predicted measurement
+  VectorXd z_pred_;
+
+  //measurement covariance matrix S
+  MatrixXd S_;
+
+  // measurement noise covariance matrix
+  MatrixXd R_radar_;
+  MatrixXd R_lidar_;
+
+  // radar NIS
+  double NIS_radar_;
+
+  // lidar NIS
+  double NIS_lidar_;
+
 
   /**
    * Constructor
@@ -102,6 +124,15 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+
+private:
+  MatrixXd AugmentedSigmaPoints();
+  void SigmaPointPrediction(const MatrixXd& Xsig_aug, double delta_t);
+  void PredictMeanAndCovariance();
+  void PredictRadarMeasurement();
+  void PredictLidarMeasurement();
+
 };
 
 #endif /* UKF_H */
